@@ -1,0 +1,691 @@
+--病人基本信息
+select a.*,rowid from gdmch.zy_t_brjbxx a
+where bah like 'B003430'
+--order by bah desc
+--where sfzh like '441522196206042712%'
+where lsh = '2024-03896'
+where brxm = '邓清文'
+
+select b.name,c.name,a.* from gdmch.zy_t_brjbxx a left join gdmch.mz_t_codes b on a.brlb2 = b.bm left join gdmch.mz_t_codes c on a.ybbrlx = c.bm 
+order by jbrq desc
+
+select * from gdmch.gzyb_t_mb t where t.place_dic_val_code='440300' and t.dic_type_code=('ADMDVS_CODE')
+--住院bk表
+select * from gdmch.Zy_t_Brjbxx_Bk_V2015
+where lsh = '2022-67742'
+
+---------------------------------------------------科室病区表---------------------------------------------------
+--科室字典
+select a.*,rowid from gdmch.rl_t_keshiku a
+where ksmc like '%创伤%'
+--where hr_name like '%烧%'
+--where ksmc != hr_name
+--and kslb = '1'
+where ksbm = '0491'
+
+--病区字典
+select a.*,rowid from gdmch.bc_t_bqbh a
+--where bqbh = '17'
+where bqmc like '%眼科%'
+
+--科室病区对应
+select a.*,rowid from gdmch.ksbqdy a
+--where keshi = '0007'
+where bqbh = '9J'
+
+--病区床位信息
+select a.*,rowid from gdmch.bqcwxx a
+--where cwwzbs = 'PZ03111112 '
+--where wjcw_lsh = '2022-67856'
+--where zyzyh = '2022-67856'
+--where sfxmbm = '110900001-1/4aT'
+where bqbh = '84'
+and ch = '091'
+
+--病区床位信息bk表
+select a.*,rowid from gdmch.bqcwxx_bk_v2007 a
+where bqbh = '23'
+and ch = '11'
+
+--护士病区权限
+select a.*,b.bqmc,c.ksmc from gdmch.Ks_t_bqqx a left join gdmch.bc_t_bqbh b on a.bqbh = b.bqbh left join gdmch.rl_t_keshiku c on a.ksbm = c.ksbm
+where YGH in ('0501',
+'T846',
+'T833',
+'R162',
+'T847',
+'T834',
+'R441',
+'R087',
+'R439',
+'T845',
+'T844',
+'T848',
+'T884',
+'R171',
+'R164',
+'T838',
+'R066',
+'R225',
+'R428',
+'R859',
+'T831',
+'Q291',
+'Q217'
+)
+
+select a.*,rowid from gdmch.Ks_t_bqqx a
+where YGH = 'T372'
+
+update gdmch.Ks_t_bqqx set ksbm = '0525'
+where ksbm != '0525'
+and bqbh = '58'
+
+select a.*,rowid from gdmch.Ks_t_bqqx a
+where ksbm = '0525'
+and bqbh = '58'
+
+--科室病区一对一对应
+select a.*,rowid from ksbqydydy a
+where ksbm = '0493'
+select a.*,b.bqmc from
+(select a.*,b.ksmc from gdmch.ksbqdy a left join gdmch.rl_t_keshiku b on a.keshi = b.ksbm) a left join gdmch.bc_t_bqbh b on a.bqbh = b.bqbh
+--共用护理单元
+select a.*,rowid from  gdmch.gyhldy a
+where zks = '0053'
+
+select a.*,b.ksmc from
+(select a.*,b.ksmc from  gdmch.gyhldy a left join gdmch.rl_t_keshiku b on a.zks = b.ksbm) a left join gdmch.rl_t_keshiku  b on a.fks = b.ksbm
+
+--病区外借床位对应（已弃用）
+select a.*,rowid from gdmch.BQCWWJDY a
+
+select a.*,rowid from gdmch.BQCWWJDY a
+where bqbh not in (select bqbh from ksbqydydy)
+
+--病区外借床位对应（病区对病区）新
+select a.* from gdmch.BC_T_BQWJDY a
+
+insert into gdmch.BC_T_BQWJDY
+select a.wjks,b.bqbh,a.bqbh from gdmch.BQCWWJDY a left join gdmch.ksbqdy b on a.wjks = b.keshi
+where a.wjks not in ('0247','0129','0233','0229','0117','0091')
+
+--护理交班表
+select a.*, rowid from gdmch.ZY_T_HLJBB_QMXX a
+
+--人员表
+select * from gdmch.rl_t_ygk
+--where ksbm = '0040'
+--and cssj > to_date('1996-01-01 00:00:00','yyyy-mm-dd hh24:mi:ss')
+--and xb = '女'
+--where xm = '蒋晓红'
+where lsh = 'T561'
+
+--三大目录：
+--药库
+select t.sfbyj,t.*,t.rowid from gdmch.yk_t_ypzl t
+where zwmc1 like '%可视手术模型%'
+where ypbm = '1132000234'
+
+--耗材
+select t.*,t.rowid from gdmch.ck_t_wpbmb t
+where wpmc like '%使用血管解剖刀加收%'
+where wpbm = 'B1010126'
+
+--收费项目
+select t.*,t.rowid from gdmch.cw_t_sfxm t
+--where xmbm in ('250700010-2','250700031F')
+where xmmc like '%使用血管解剖刀加收%'
+
+---------------------------------------------------门诊相关---------------------------------------------------
+--门诊挂号信息
+select a.*,rowid from gdmch.mz_t_ghxx a
+--where ghks = '0319'
+--where mzh = '202401183751'
+where blh = '1020280186'
+and mzh like '%202312301214%'
+
+--门诊挂号收费记录
+select a.*,rowid from gdmch.mz_t_ghsfjl a
+where mzh = '202401140199'
+202401150240
+select a.mzh,b.zd from gdmch.mz_t_ghxx a left join gdmch.mz_t_mzzd b on a.mzh = b.mzh
+where blh = '202311243896'
+
+--门诊病人基本信息
+select rowid,a.* from gdmch.mz_t_brjbxx a
+--where sfz = '440804198501100542'
+where blh = '2001345420'
+
+--门诊收费记录
+select a.*,rowid from gdmch.mz_t_sfjl a
+where mzh = '202401190891'
+--and sfmc like '%人粒%'
+--order by rq desc
+and zt = '0'
+where zfybm = 'L1228658391'
+for update
+
+select * from gdmch.mz_t_sfjl,gdmch.mz_t_ghxx
+where blh = '2100134577'
+
+--门诊检验处方
+select a.*,rowid from gdmch.mz_t_jycf a
+where mzh = '202312210737'
+where jyjcdh = 'R1231281174'
+
+--治疗记录
+select a.*,rowid from gdmch.mz_t_zsjl a
+where mzh = '20231208A445'
+
+--检查处方
+select a.*,rowid from gdmch.pacs_t_jc a
+where lsh like '20231222%'
+
+--药品处方
+select a.*,rowid from gdmch.mz_t_ypcf a
+where mzh = '202401190891'
+
+select a.*,rowid from gdmch.mz_t_tycf a
+where mzh = '202401190891'
+--药品处方子表
+select a.*,rowid from gdmch.mz_t_ypcf_zb a
+where mzh = '202401190891'
+
+--门诊诊断
+select a.*,rowid from gdmch.mz_t_mzzd a
+where mzh = '202401183751'
+
+--发票tje
+select a.*,rowid from gdmch.mz_t_fp a
+where fphm = 'ZD1169938'
+where mzh = '202311243896'
+
+select zje,a.*,rowid from gdmch.mz_t_fpfl a
+where fphm = 'ZD1169938'
+--门诊收费纸质票发票卡纸打歪重打。替换发票号码。所有的只要替换发票执行这条即可
+update gdmch.mz_t_fp t set t.ljbz='0',t.cdry=null,cdrq=null , sfy =(case when sfy <>'zzyl' then 'zzyl' else sfy end),
+      rbrq =(case when sfy <>'zzyl' then kprq else rbrq end)
+      where fphm =('0286473439') and sflx in ('2211','2212');
+
+---------------------------------------------------信息中间表---------------------------------------------------
+--查询语句，如果有记录，说明改过病案号：
+select * from gdmch.zy_t_brjbxx_bk a where 
+exists (select * from gdmch.zy_t_brjbxx where lsh=a.lsh and (bah<>a.bah ))
+and lsh='2023-94208'
+--根据病案号查找病人变动信息发送记录
+select b.id, b.create_time, b.send_time, b.eventname, b.parameters, b.error_code, b.key_value
+from gdmch.zy_t_brjbxx a join gdmch.t_inter_outmessage b on a.lsh = b.key_value
+where a.bah = '598861'
+--and eventname like '%出院%'
+order by send_time desc
+--中间表--
+select a.*,rowid from gdmch.t_inter_outmessage a
+--where eventname like '%入科%'
+where key_value = '2023-79282'
+order by send_time desc
+and eventname like '%出院%'
+where id = '298541946'293673103
+---------------------------------------------------住院相关---------------------------------------------------
+--住院清单记录
+select a.*, rowid from gdmch.zy_T_qdjl a
+where lsh = '2024-03168'
+and zt in ('0','9')
+--and zfbz = 'Y'
+--where fydh = '202312190764'
+--and zfyxbm like 'L223952406%'
+and sfmc like '%头孢他%'
+and zt = '0'
+--AND zfybm = '20231221888281'
+--and inject_group = 'D2'
+where xmbm = '250501011'
+
+select sum(sfje) from gdmch.zy_T_qdjl a
+where lsh = '2023-93292'
+and zt in ('0','9')
+
+select a.*, rowid from gdmch.Zy_t_Qdjl_Bk_V2017 a
+where lsh = '2023-93292'
+AND zfybm = '20231221888281'
+update gdmch.zy_T_qdjl set sfjz=0,sfje=ysje
+where sfjz>0 and lsh = '2023-73625'
+and lsh in ('2022-80061')
+and sfmc in ('特殊疾病护理','特殊病房床位费加收')
+
+--住院清单记录bk表
+select * from gdmch.Zy_t_Yz_Bk_V2015 where LSH = '2023-93292'  AND yz_sn = '20231221888278';
+
+--住院清单记录改执行时间
+update gdmch.zy_T_qdjl set zxrq = to_date('2023-01-03 23:00:22','yyyy-mm-dd hh24:mi:ss')
+where zxrq > to_date('2023-01-03 23:10:22','yyyy-mm-dd hh24:mi:ss')
+and lsh = '2022-80286'
+
+update gdmch.zy_T_qdjl set zt = '9'
+where lsh = '2022-74107'
+and zt = '0'
+and zxrq < to_date('2022-12-04 00:00:00','yyyy-mm-dd hh24:mi:ss')
+
+select a.*, rowid from gdmch.zy_T_qdjl a
+where lsh = '2022-80808'
+and zt in ('0','9')
+and xmbm in (select name from gdmch.mz_T_codes a
+--where bm = 'ZLXZ'
+where father = 'ZLXZ'
+and bz = '护理')
+
+--出院清单记录
+select a.*, rowid from gdmch.zy_T_cyqdjl a
+--where xmbm = '1171000084'
+--order by rq desc
+where lsh = '2023-88658'
+and sfmc like '%醋酸%'
+and zt = '1'
+where kcks = ''
+
+select * from gdmch.zy_t_cyqdjl where zfyxbm='0000255154' and jiliang='手术' and sfmc like'%穿刺针%'
+
+--住院医嘱信息
+select a.*,rowid from gdmch.zy_t_yz a
+--where yz_type = '08'
+--where remark  like '%术中用血%'
+--where encode = '1171000084'
+where lsh = '2024-03742'
+--and yz_sn in ('20240106230799'-2,'20240106232710'-0,'20240106232714'-0)
+--and inject_group like '%D-2%'
+--and start_date like sysdate
+--and itemtype = '6'
+--where addiencode = 'R2238767608'
+--and encode = '120300001-1'
+--and remark like '%出%'
+and itemname like '%注射用福沙匹坦双葡甲胺%'
+order by start_date desc
+
+--住院医嘱bk表
+select a.*,rowid from gdmch.zy_t_yz_bk_v2015 a
+where lsh = '2023-95605'
+and inject_group = '13'
+and yz_sn = '20231226995228'
+and itemname like '%氯化钾%'
+
+--住院-母子关系
+select * from gdmch.zy_mzgx
+where zyh = '2023-93474'
+
+--住院情况
+select a.*,rowid from gdmch.zy_t_zyqk a
+--where zkhs is not null
+where lsh = '2023-73427'
+
+--住院床位记录
+select a.*,rowid from gdmch.bc_t_cwjl a
+--where ch like '%+%'
+where zyh = '2024-04355'
+
+--病区床位信息
+select a.*,rowid from gdmch.bqcwxx a
+--where ch like '%+%'
+--where wjcw_lsh = '2022-67856'
+--where zyzyh = '2023-68141'
+where bqbh like '84'
+
+--病人转科信息、病人转科记录
+select a.*,rowid from gdmch.zy_t_brzkxx a
+where lsh = '2023-91377'
+
+select a.*,rowid from gdmch.zy_t_zkjl a
+where lsh = '2023-50907'
+--住院诊断
+select a.* from gdmch.zy_t_zyzd 
+where lsh = '2022-40860'
+where value like '%下肢静脉曲张%'
+--or value like '%胃息肉%'
+order by rq desc
+
+--住院病人转科信息
+select * from gdmch.zy_t_brzkxx
+--where tjsj > sysdate - 7
+where lsh = '2024-02250'
+
+--住院病房日报
+select km.*,rowid from gdmch.ZY_T_BFGZRB_T km
+where ksbm='0049'
+order by sbc desc
+and sbc > sysdate -1
+
+--护理视图
+select * from gdmch.v_ewell_inpatient_order3
+where patient_id = '496898' 
+--and inject_group = '1-2' 
+and order_no = '20221031748771'
+and order_name like '%急%'
+
+select * from gdmch.v_ewell_inpatient_order2
+
+--lis医嘱信息
+select a.* from gdmch.v_ewell_inpatient_lis_order_al a
+where bar_code = '02227460939'
+where patient_id = '601684'
+order by start_date desc
+
+select a.* from gdmch.v_ewell_inpatient_lis_order a
+
+select * from gdmch.cy_v_zy_jyxmcyxx
+select * from gdmch.sqdvjyd
+--手术主表
+select * from gdmch.ss_t_sszb
+where hm = '2023-20684'
+order by txsj desc
+--医嘱频率
+select * from gdmch.Zy_t_Hstemp_hl
+where plmc like '%天%'
+where plbm = '2301'
+for update
+
+--住院发票
+select a.*, rowid from gdmch.zy_T_fp a
+
+--住院发票分类
+select a.*, rowid from gdmch.zy_T_fpfl a
+--住院押金
+select a.*, rowid from gdmch.zy_t_yjjlsz a
+where dh in ('16601124')
+
+--押金单遗失
+update  gdmch.zy_t_yjjlsz t set t.ysbz = 'Y',t.ysczsj =t.sysj,t.ysczz = t.fpkpry where dh ='16219453';
+--药房发药记录
+select a.*, rowid from gdmch.yf_T_fyjl a
+
+--发药相关
+select a.*, rowid from gdmch.zy_t_zyfyd a
+where mzh = ''
+--护理手术视图
+select * from gdmch.v_ewell_operation
+--营养评分
+select * from gdmch.t_nutritionscore
+where patient_id = '656872'
+---------------------------------------------------检验检查---------------------------------------------------
+--PACS检查
+select * from gdmch.pacs_t_jc
+where bah = '662761'
+and jcdh like '%N%'
+and jcmc like '%肌电图%'
+
+--智护屏视图
+select a.* from gdmch.zy_v_lfzybcxx a
+--pacs视图
+select * from gdmch.pacs_v_jc_ex
+--where blh = '2001663016'
+--where brxm = '郭欣彤'
+where jcdh = 'k2239885562'
+
+--lis视图
+select * from gdmch.lis_v_hsbrxx
+--where 姓名 = '周丽华'
+--where 证件号码 = '440105196302135426'
+where jyjcdh in ('01231285187')
+
+--标签打印弹窗提示
+select a.*,rowid from gdmch.jy_t_sfxm a
+where xmmc like '%糖耐量%'
+and yb like '%本院%'
+
+--检验出科信息
+select * from gdmch.jy_t_cyxx
+
+--检验信息
+select * from gdmch.jy_t_detail
+where bm in ('051108','051110','051111')
+and xmmc like '%儿童双侧%'
+---------------------------------------------------其他---------------------------------------------------
+--ca签名信息
+select * from gdmch.ca_t_record_ip
+where catype in ('04','05','06','07','08','09')
+and cadate >=sysdate-5
+order by cadate desc
+
+--审方开关
+select a.*, rowid from gdmch.mz_t_codes a
+where a.name like '%审方%'
+
+--危急值开关
+select a.*, rowid from gdmch.mz_t_codes a
+where a.name like '%危急值%'
+
+--总量限制开关
+select a.*, rowid from gdmch.mz_t_codes a
+where a.name like '%总量限制%'
+
+select a.*, rowid from gdmch.Mz_t_Codes_Bk a
+where a.name_old like '%总量限制%' or a.name_new like '%总量限制%'
+--互认开关
+select a.*, rowid from gdmch.mz_t_codes a
+where a.name like '%互认%'
+
+--收费开关
+select a.*, rowid from gdmch.mz_t_codes a
+where a.BM like '%SFKG%'
+
+--总量控制
+select a.*, rowid from gdmch.mz_T_codes a
+--where bm = 'ZLXZ'
+where father = 'ZLXZ'
+--and bz = '抢救'
+and name = '121600004'
+
+--转科、出院停床强制执行卡控
+select a.*, rowid from gdmch.mz_T_codes a
+where bm = 'ZXKSXZ'
+
+select a.*, rowid from gdmch.Mz_t_Codes_Bk a
+where bm_new = 'ZXKSXZ'
+
+--转科、出院停床强制执行卡控白名单
+select t.*,rowid from gdmch.mz_T_codes t 
+where father = 'ZXKSXZ'
+--VIP病区维护
+select a.*,rowid from gdmch.mz_t_codes a 
+where father like 'VIP%' 
+
+--未挂号病人提示
+select a.*, rowid from gdmch.mz_T_codes a
+where name like '%未挂号%'
+
+--广州医保审核开关
+select a.*, rowid from gdmch.mz_T_codes a
+where bm = 'GZYBSH'
+
+select a.*, rowid from gdmch.Mz_t_Codes_Bk a
+where bm_new = 'GZYBSH'
+--信息字典
+select a.*, rowid from gdmch.mz_T_codes a
+where father like '%ZL%'
+
+--护理管理统计视图
+select * from v_bi_mgxzb
+order by 科室主键
+
+--连帆视图
+select a.*,rowid from gdmch.zy_v_lfzybcxx a
+
+--营养评分表
+select * from gdmch.t_nutritionscore
+where patient_id = '234587'
+
+--院长查询
+select distinct(substr(zb,4)) from gdmch.yzcx_t_yztl
+
+
+---插入到 移动医生权限表 
+insert into xh.t_ydys_qx(gh,ksbm) values ('&gh', '&ksbm')
+-------------本院职工院内记账---------
+select d.brxm,d.zgbh,(sum(ynjz)) 本院记账 from gdmch.mz_t_fp a, gdmch.mz_t_fpfl b,gdmch.mz_t_ghxx c, gdmch.mz_t_brjbxx d 
+where a.kprq > To_Date('2023-01-01', 'yyyy-mm-dd') 
+and ztbz = 0 
+and a.kprq < To_Date('2024-01-01', 'yyyy-mm-dd')    
+and c.mzh = a.mzh
+and (c.blh IN ('') or d.zgbh ='Z425')
+and a.fphm = b.fphm
+and d.blh = c.blh
+and b.ynjz > 0
+group by d.brxm,d.zgbh
+--having sum(ynjz)>=3000
+
+--核酸混检
+select a.*,rowid from gdmch.jy_t_jyhj a
+--where hjdh like '01309%555%'
+where jyjcdh in ('02183368315','02183371083','02183404188')
+where brxm = '周丽华'
+
+--混检白名单
+select  t.*, t.rowid from gdmch.JY_T_YNHSSC_LIST t 
+where  mzkh = '3501196377'
+and ksbm = '0436'
+
+--1.查出来有多少条记录（查询出小孩未缴费的项目）
+Select  a.*,rowid From gdmch.zy_t_qdjl a Where lsh='2022-28146'  and zt=0 And bbbh=1;
+--2. 记录好对应条数，将其bbbh改为'0'（即将小孩的收费清单改为大人的）
+Update gdmch.zy_t_qdjl Set bbbh=0,ddh='1'  Where lsh='2022-28146'and zt=0 And bbbh=1
+--3. 让其收费，收费后，将其bbbh改为'1'（还原）
+Update gdmch.zy_t_cyqdjl Set bbbh=1,ddh='1'  Where lsh='2022-28146'and zt=1 And ddh='1'
+
+select * from gdmch.mz_t_fpfl
+
+--医用耗材统计语句
+SELECT "ZY_T_QDJL"."SFMC",
+         "ZY_T_QDJL"."SHULIANG",
+         "ZY_T_QDJL"."GG",
+         "ZY_T_QDJL"."LINGSHOUJ",
+         "ZY_T_BRJBXX"."BRXM",
+         "ZY_T_BRJBXX"."BAH",
+         "ZY_T_QDJL"."RQ",
+         '' A
+FROM (select * from zy_T_qdjl union select * from zy_T_cyqdjl) "ZY_T_QDJL","ZY_T_BRJBXX"
+WHERE ( "ZY_T_QDJL"."ZT" in ('0','1') ) AND  
+      ( "ZY_T_QDJL"."ITEMTYPE" ='XHP' ) AND  
+         ( "ZY_T_QDJL"."BQBH" = ( :BQBH ) ) AND  
+         ( "ZY_T_QDJL"."BRDQKS" = decode(:kcks,'99',"ZY_T_QDJL"."BRDQKS",:kcks) ) AND  
+         ( "ZY_T_QDJL"."ZXRQ" is not null ) AND
+         ( "ZY_T_QDJL"."LINGSHOUJ" >=:LSJ ) AND  
+         ( "ZY_T_QDJL"."RQ" >= TO_DATE(:KSSJ,'YYYY-MM-DD') ) AND  
+      ( "ZY_T_QDJL"."RQ" <= TO_DATE(:JSSJ,'YYYY-MM-DD')+1 ) AND  
+         ( "ZY_T_QDJL"."LSH" = "ZY_T_BRJBXX"."LSH" ) 
+
+--查有什么超量的
+select * from (
+       select c.bz fl,nvl(a.bbbh,'0'),
+       sum(nvl(shuliang, 1)) zl,
+       decode(trunc(nvl(cysj, sysdate)) - trunc(rysj),
+            0,
+            1,
+            trunc(nvl(cysj, sysdate) - trunc(rysj))) ts
+        from zy_T_qdjl a, zy_T_zyqk b, mz_T_codes c
+       where a.lsh = b.lsh
+        and a.zt in ('0', '1')
+        and a.zxrq is not null 
+        and nvl(a.bbbh,'0') = '0'
+        and nvl(gg,'1') <>'陪人占床'
+        and b.lsh = b.lsh
+        and a.xmbm = c.name
+        and c.father = 'ZLXZ'
+        and a.lsh = &ls_lsh
+       group by c.bz,nvl(a.bbbh,'0'),
+             decode(trunc(nvl(cysj, sysdate)) - trunc(rysj),
+                  0,
+                  1,
+                  trunc(nvl(cysj, sysdate) - trunc(rysj)))                
+       union all
+       select c.bz fl,nvl(a.bbbh,'0'),
+           sum(nvl(shuliang, 1)) zl,
+           decode(trunc(nvl(cysj, sysdate)) - trunc(gx.bbcsrq),
+                0,
+                1,
+                trunc(nvl(cysj, sysdate) - trunc(gx.bbcsrq))) ts
+        from zy_T_qdjl a, zy_T_zyqk b, mz_T_codes c, zy_mzgx gx
+       where a.lsh = b.lsh
+        and a.lsh = gx.zyh
+        and nvl(a.bbbh,'0') = gx.bbbh
+        and a.zt in ('0', '1')
+        and a.zxrq is not null
+        and nvl(gg,'1') <>'陪人占床'
+        and nvl(a.bbbh,'0') <> '0'
+        and b.lsh = b.lsh
+        and a.xmbm = c.name
+        and c.father = 'ZLXZ'
+        and a.lsh = &ls_lsh
+       group by c.bz,nvl(a.bbbh,'0'),
+             decode(trunc(nvl(cysj, sysdate)) - trunc(gx.bbcsrq),
+                  0,
+                  1,
+                  trunc(nvl(cysj, sysdate) - trunc(gx.bbcsrq)))) d where d.zl>ts;
+
+--医生助手增加权限
+insert into xh.t_ydys_qx(gh,ksbm)
+values('Q125','0041')
+
+select * from xh.t_ydys_qx
+WHERE gh = 'Q125'
+
+--收费项目
+select xmbm,xmmc,yb from 
+(select * from gdmch.cw_t_sfxm a 
+full join gdmch.cw_t_sfxm_ex b on a.xmbm = b.xmbm)
+
+
+select * from gdmch.zy_t_qdjl where lsh = '2022-34635' AND ZT = 0 and xmbm = '120200001'
+select a.*,rowid from gdmch.zy_T_qdjl a where lsh = '2022-34901' and xh ='1343';
+
+
+
+select a.id,a.patient_id,a.patient_name,a.form_time,a.bed_no from MCS_DOC_FORM a
+where a.patient_id = '602195'
+and a.template_code = '403'
+and a.form_time < to_date('2022-08-14 10:00:00', 'yyyy-mm-dd hh24:mi:ss')
+
+select * from mcs_doc_form a
+where a.patient_id = '602195'
+and a.template_code = '403'
+
+--核酸数据
+select itemname,count(distinct lsh) from gdmch.zy_t_yz a,gdmch.cov_v_lastres b where encode in('121803023','121803022','121803024')
+and a.lsh=b.patient_no and (b.orf1ab<>'阴性（-）' or b.n<>'阴性（-）'or 
+exists(select * from jhemr.emr_v_diagnosis@emr4sj where patient_no=a.lsh 
+       and diagnosis_code in('B34.20001','J12.80001','U07.100x001','U07.100x002','U07.100x003','U07.101','U07.102','U07.103')))
+and start_date>=trunc(sysdate-1) and start_date<trunc(sysdate)
+group by itemname
+
+select * from gdmch.cov_v_lastres
+
+
+select c.*,d.nl from
+(select a.lsh,itemname from gdmch.zy_t_yz a,gdmch.cov_v_lastres b
+where encode in('121803023','121803022','121803024')
+and a.lsh=b.patient_no 
+and (b.orf1ab<>'阴性（-）' or b.n<>'阴性（-）'or 
+exists(select * from jhemr.emr_v_diagnosis@emr4sj where patient_no=a.lsh 
+       and diagnosis_code in('B34.20001','J12.80001','U07.100x001','U07.100x002','U07.100x003','U07.101','U07.102','U07.103')))
+and start_date>=trunc(sysdate-1) 
+and start_date<trunc(sysdate)) c left join gdmch.zy_t_brjbxx d on c.lsh = d.lsh 
+         
+-----------------------------------------------------常用统计------------------------------------------------- 
+--每月统计出院床位数
+select count(distinct lsh) from gdmch.zy_T_cyqdjl a
+where a.rq >= to_date('2023-01-01', 'yyyy-mm-dd')
+and a.rq <  to_date('2023-02-01', 'yyyy-mm-dd')
+and xmbm = '110900003'
+
+select distinct(sfxmbm),t.xmmc,t.sfbz from gdmch.bqcwxx a left join gdmch.cw_t_sfxm t on a.sfxmbm = t.xmbm
+
+--每月统计ICU人数
+select sum(b.tcrq - zrrq) from gdmch.zy_t_zyqk a left join gdmch.bc_t_cwjl b on a.lsh = b.zyh
+where a.cykb != '0075'
+and a.cysj >= to_date('2023-01-01', 'yyyy-mm-dd')
+and a.cysj <  to_date('2023-02-01', 'yyyy-mm-dd')
+and b.bqbh = '01'
+
+--
+select a.bah 住院号, a.zycs 住院次数,a.lsh 住院流水号,a.brxm 病人姓名, b.rysj 入院时间,b.cysj 出院时间,count(*) ICU住院天数 from gdmch.zy_t_brjbxx a left join gdmch.zy_t_zyqk b on a.lsh = b.lsh left join (Select * From gdmch.zy_t_qdjl
+Union All
+Select * From gdmch.zy_t_cyqdjl) c on a.lsh = c.lsh
+where c.xmbm = '110900003'
+and c.zt in ('0','3')
+group by a.bah,a.zycs,a.lsh,a.brxm,b.rysj,b.cysj
